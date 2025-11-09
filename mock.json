@@ -1,0 +1,250 @@
+{
+  "dashboardStats": [
+    {
+      "label": "BUGS FIXED",
+      "value": "324",
+      "description": "THIS MONTH",
+      "intent": "positive",
+      "icon": "gear",
+      "direction": "up"
+    },
+    {
+      "label": "CODE QUALITY",
+      "value": "94%",
+      "description": "IMPROVEMENT SCORE",
+      "intent": "positive",
+      "icon": "proccesor",
+      "direction": "up"
+    },
+    {
+      "label": "LEARNING STREAK",
+      "value": "12",
+      "description": "DAYS CONSECUTIVE",
+      "intent": "positive",
+      "icon": "boom",
+      "tag": "🔥 HOT"
+    },
+    {
+      "label": "LANGUAGES MASTERED",
+      "value": "6",
+      "description": "PROFICIENCY LEVEL",
+      "intent": "positive",
+      "icon": "atom"
+    }
+  ],
+  "chartData": {
+    "week": [
+      {
+        "date": "06/07",
+        "bugsFixed": 12,
+        "codeQuality": 85,
+        "learningTime": 45
+      },
+      {
+        "date": "07/07",
+        "bugsFixed": 18,
+        "codeQuality": 88,
+        "learningTime": 52
+      },
+      {
+        "date": "08/07",
+        "bugsFixed": 24,
+        "codeQuality": 91,
+        "learningTime": 60
+      },
+      {
+        "date": "09/07",
+        "bugsFixed": 32,
+        "codeQuality": 93,
+        "learningTime": 75
+      },
+      {
+        "date": "10/07",
+        "bugsFixed": 28,
+        "codeQuality": 92,
+        "learningTime": 65
+      },
+      {
+        "date": "11/07",
+        "bugsFixed": 35,
+        "codeQuality": 94,
+        "learningTime": 80
+      },
+      {
+        "date": "12/07",
+        "bugsFixed": 42,
+        "codeQuality": 95,
+        "learningTime": 90
+      },
+      {
+        "date": "13/07",
+        "bugsFixed": 38,
+        "codeQuality": 94,
+        "learningTime": 85
+      }
+    ],
+    "month": [
+      { "date": "Jan", "bugsFixed": 95, "codeQuality": 82, "learningTime": 240 },
+      { "date": "Feb", "bugsFixed": 112, "codeQuality": 85, "learningTime": 260 },
+      { "date": "Mar", "bugsFixed": 145, "codeQuality": 88, "learningTime": 290 },
+      { "date": "Apr", "bugsFixed": 128, "codeQuality": 87, "learningTime": 275 },
+      { "date": "May", "bugsFixed": 178, "codeQuality": 90, "learningTime": 310 },
+      { "date": "Jun", "bugsFixed": 156, "codeQuality": 89, "learningTime": 295 },
+      { "date": "Jul", "bugsFixed": 189, "codeQuality": 92, "learningTime": 330 },
+      { "date": "Aug", "bugsFixed": 167, "codeQuality": 91, "learningTime": 310 },
+      { "date": "Sep", "bugsFixed": 201, "codeQuality": 93, "learningTime": 345 },
+      { "date": "Oct", "bugsFixed": 184, "codeQuality": 92, "learningTime": 320 },
+      { "date": "Nov", "bugsFixed": 219, "codeQuality": 94, "learningTime": 360 },
+      { "date": "Dec", "bugsFixed": 245, "codeQuality": 95, "learningTime": 380 }
+    ],
+    "year": [
+      {
+        "date": "2020",
+        "bugsFixed": 1240,
+        "codeQuality": 78,
+        "learningTime": 2800
+      },
+      {
+        "date": "2021",
+        "bugsFixed": 1456,
+        "codeQuality": 82,
+        "learningTime": 3200
+      },
+      {
+        "date": "2022",
+        "bugsFixed": 1876,
+        "codeQuality": 86,
+        "learningTime": 3800
+      },
+      {
+        "date": "2023",
+        "bugsFixed": 1632,
+        "codeQuality": 88,
+        "learningTime": 3500
+      },
+      { "date": "2024", "bugsFixed": 2104, "codeQuality": 92, "learningTime": 4200 }
+    ]
+  },
+  "codeTutorStats": {
+    "topLanguages": [
+      { "language": "JavaScript", "bugsFixed": 124, "percentage": 28 },
+      { "language": "Python", "bugsFixed": 89, "percentage": 20 },
+      { "language": "TypeScript", "bugsFixed": 76, "percentage": 17 },
+      { "language": "Java", "bugsFixed": 65, "percentage": 15 },
+      { "language": "C++", "bugsFixed": 48, "percentage": 11 },
+      { "language": "Others", "bugsFixed": 22, "percentage": 5 }
+    ],
+    "topErrors": [
+      { "error": "Undefined References", "count": 58, "percentage": 18 },
+      { "error": "Syntax Errors", "count": 45, "percentage": 14 },
+      { "error": "Type Mismatch", "count": 38, "percentage": 12 },
+      { "error": "Null Pointer", "count": 32, "percentage": 10 },
+      { "error": "Array Out of Bounds", "count": 28, "percentage": 9 },
+      { "error": "Others", "count": 123, "percentage": 37 }
+    ]
+  },
+  "rebelsRanking": [
+    {
+      "id": 1,
+      "name": "KRIMSON",
+      "handle": "@KRIMSON",
+      "streak": "5 DAYS STREAK 🔥",
+      "points": 187,
+      "avatar": "/avatars/user_krimson.png",
+      "featured": true,
+      "subtitle": "Bugs: 47"
+    },
+    {
+      "id": 2,
+      "name": "MATI",
+      "handle": "@MATI",
+      "streak": "3 DAYS STREAK",
+      "points": 156,
+      "avatar": "/avatars/user_mati.png",
+      "subtitle": "Bugs: 39"
+    },
+    {
+      "id": 3,
+      "name": "PEK",
+      "handle": "@MATT",
+      "streak": "2 DAYS STREAK",
+      "points": 124,
+      "avatar": "/avatars/user_pek.png",
+      "subtitle": "Bugs: 31"
+    },
+    {
+      "id": 4,
+      "name": "JOYBOY",
+      "handle": "@JOYBOY",
+      "streak": "1 DAY STREAK",
+      "points": 98,
+      "avatar": "/avatars/user_joyboy.png",
+      "subtitle": "Bugs: 24"
+    }
+  ],
+  "securityStatus": [
+    {
+      "title": "CODE ANALYZER",
+      "value": "ON",
+      "status": "[RUNNING...]",
+      "variant": "success"
+    },
+    {
+      "title": "ERROR DETECTION",
+      "value": "100%",
+      "status": "[ACTIVE]",
+      "variant": "success"
+    },
+    {
+      "title": "LEARNING INSIGHTS",
+      "value": "342",
+      "status": "[GENERATED]",
+      "variant": "success"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1",
+      "title": "BUG FIXED",
+      "message": "Congratulations! You fixed a critical null pointer exception in your JavaScript code.",
+      "timestamp": "2024-07-10T13:39:00Z",
+      "type": "success",
+      "read": false,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-2",
+      "title": "LEARNING MILESTONE",
+      "message": "You've mastered Python basics! New advanced topics unlocked.",
+      "timestamp": "2024-07-10T13:35:00Z",
+      "type": "info",
+      "read": false,
+      "priority": "low"
+    },
+    {
+      "id": "notif-3",
+      "title": "STREAK ACTIVE",
+      "message": "Keep it up! You're on a 12-day learning streak.",
+      "timestamp": "2024-07-10T12:15:00Z",
+      "type": "info",
+      "read": true,
+      "priority": "medium"
+    },
+    {
+      "id": "notif-4",
+      "title": "CODE QUALITY IMPROVED",
+      "message": "Your code quality score improved to 94% this month.",
+      "timestamp": "2024-07-10T11:45:00Z",
+      "type": "success",
+      "read": true,
+      "priority": "high"
+    }
+  ],
+  "widgetData": {
+    "location": "Vasundhara Enclave, India",
+    "timezone": "UTC+5:30",
+    "temperature": "27°C",
+    "weather": "Partly Cloudy",
+    "date": "Thursday, November 6th, 2025"
+  }
+}
