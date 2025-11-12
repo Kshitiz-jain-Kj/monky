@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation"
 import { useFlowchart } from "@/lib/context/flowchart-context"
 import { generateFlowchart } from "@/lib/utils/flowchart-generator"
 import type { ErrorAnalysis } from "@/lib/types/error-analysis"
+import { MonacoEditor } from "@/components/codetutor/monaco-editor"
 
 const MOCK_ANALYSIS = {
   errorType: "TypeError",
@@ -244,12 +245,9 @@ export default function AIDebuggerPage() {
 
             <div>
               <label className="text-xs uppercase text-foreground/60 mb-2 block">Your Code</label>
-              <textarea
-                value={userCode}
-                onChange={(e) => setUserCode(e.target.value)}
-                placeholder="Paste your code here..."
-                className="w-full h-48 px-3 py-2 bg-background border border-pop rounded font-mono text-sm resize-none"
-              />
+              <div className="h-[400px] border border-pop rounded overflow-hidden">
+                <MonacoEditor value={userCode} onChange={setUserCode} language={userLanguage} />
+              </div>
             </div>
 
             <div>
