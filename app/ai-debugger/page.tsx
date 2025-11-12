@@ -355,7 +355,7 @@ export default function AIDebuggerPage() {
                         : "Error Root Cause"}
                     </CardTitle>
                     {!(isUsingAI && displayData.errorType === "No Errors Found") && (
-                      <Badge className="bg-red-500/20 text-red-400 border-red-500/50 border">
+                      <Badge variant="outline" className="bg-red-500/20 text-red-400 border-red-500/50">
                         <AlertTriangle className="size-3 mr-1" />
                         {isUsingAI ? displayData.severity.toUpperCase() : "HIGH"} SEVERITY
                       </Badge>

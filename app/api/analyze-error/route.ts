@@ -21,7 +21,7 @@ ${code}
 
 ${errorMessage ? `Error Message: ${errorMessage}` : ""}
 
-Provide your analysis in the following JSON format (keep all text brief to fit UI layout):
+Provide your analysis in the following JSON format:
 {
   "errorType": "Brief error title (max 60 chars) or 'No Errors Found' if code is correct",
   "severity": "critical" | "warning" | "info",
@@ -36,24 +36,27 @@ Provide your analysis in the following JSON format (keep all text brief to fit U
     {
       "title": "Brief title (max 30 chars)",
       "code": "Alternative code solution or improvement",
-      "description": "Brief description (max 80 chars)"
+      "explanation": "Brief description (max 80 chars)"
     }
-  ] (provide 3 alternatives or improvements),
+  ] (provide EXACTLY 3 alternatives specific to this code),
   "variableSnapshot": {
-    "variableName": "value or 'N/A' if no variables"
-  } (extract actual variables from the code with their values. If code has no variables like print("Hello"), return empty object {}),
+    "variableName": "value"
+  } (extract ACTUAL variables with their values from THIS code),
   "learningResources": [
-    {"title": "Resource title (max 40 chars)", "url": "#"}
-  ] (provide 3 resources relevant to the code language and concepts used),
-  "learningTip": "Brief learning tip (max 120 chars) relevant to the code or language"
+    {"title": "Resource title (max 50 chars)", "description": "Brief description (max 80 chars)"}
+  ] (provide EXACTLY 3 resources relevant to THIS specific code's concepts),
+  "learningTip": "Brief learning tip (max 150 chars) relevant to this SPECIFIC code"
 }
 
 Important: 
-- Keep ALL text brief to maintain UI layout
-- If code has NO errors, set errorType to "No Errors Found" and rootCause to "Code is syntactically correct and performs as expected."
-- For variableSnapshot, extract ACTUAL variables from the code. If code is "print('Hello')", return empty object {} since there are no variables
-- Make learning resources and tips relevant to the actual code provided
-- IMPORTANT: Ensure the JSON response is valid and properly formatted with escaped characters`
+- Keep ALL text brief to fit UI layout
+- ALWAYS provide EXACTLY 3 alternatives relevant to THIS specific code
+- ALWAYS provide EXACTLY 3 learning resources relevant to THIS specific code's concepts
+- For variableSnapshot, extract ACTUAL variables with their values from THIS code
+- Learning resources MUST be specific to the concepts/patterns used in THIS code
+- Learning tip MUST be specific to THIS code, not generic advice
+- If code has NO errors, still provide improvements and relevant learning resources
+- IMPORTANT: Return ONLY valid JSON with no markdown, no explanations, just the JSON object`
 
     const response = await fetch(GEMINI_API_URL, {
       method: "POST",
@@ -134,6 +137,17 @@ Important:
       }
     }
 
+    if (!aiAnalysis.alternatives || aiAnalysis.alternatives.length < 3) {
+      // Generate fallbacks based on the actual code if AI didn't provide enough
+      const fallbackAlternatives = generateAlternatives(code, language, aiAnalysis.alternatives || [])
+      aiAnalysis.alternatives = fallbackAlternatives
+    }
+
+    if (!aiAnalysis.learningResources || aiAnalysis.learningResources.length < 3) {
+      const fallbackResources = generateLearningResources(language, code, aiAnalysis.learningResources || [])
+      aiAnalysis.learningResources = fallbackResources
+    }
+
     // Extract variable snapshot from code or use AI's snapshot
     const variableSnapshot = aiAnalysis.variableSnapshot || extractVariableSnapshot(code, language)
 
@@ -151,9 +165,9 @@ Important:
       },
       complexity: aiAnalysis.complexity !== "Low" ? `Complexity: ${aiAnalysis.complexity}` : null,
       confidence: aiAnalysis.confidence,
-      alternatives: aiAnalysis.alternatives,
+      alternatives: aiAnalysis.alternatives.slice(0, 3), // Ensure exactly 3
       variableSnapshot: Object.keys(variableSnapshot).length > 0 ? variableSnapshot : undefined,
-      learningResources: aiAnalysis.learningResources,
+      learningResources: aiAnalysis.learningResources.slice(0, 3), // Ensure exactly 3
       learningTip: aiAnalysis.learningTip,
     }
 
@@ -186,4 +200,91 @@ function extractVariableSnapshot(code: string, language: string): Record<string,
   }
 
   return snapshot
+}
+
+// Helper function to generate code-specific alternatives
+function generateAlternatives(
+  code: string,
+  language: string,
+  existing: any[],
+): Array<{ title: string; code: string; explanation: string }> {
+  const alternatives = [...existing]
+
+  // Add generic improvements based on language if we don't have 3
+  const genericAlternatives = [
+    {
+      title: "Add Error Handling",
+      code: `try {\n  ${code.split("\n").slice(0, 3).join("\n  ")}\n} catch (error) {\n  console.error(error)\n}`,
+      explanation: "Wrap code in try-catch to handle potential errors gracefully",
+    },
+    {
+      title: "Add Input Validation",
+      code: `// Add validation before processing\nif (input === null || input === undefined) {\n  throw new Error('Invalid input')\n}\n${code.split("\n").slice(0, 2).join("\n")}`,
+      explanation: "Validate inputs before processing to prevent runtime errors",
+    },
+    {
+      title: "Add Type Checking",
+      code:
+        language === "typescript"
+          ? `// Use TypeScript types\nfunction processData(data: string[]): void {\n  // Implementation\n}`
+          : `// Add runtime type checking\nif (typeof data !== 'object') {\n  throw new TypeError('Expected array')\n}`,
+      explanation: "Add type checking to catch type-related errors early",
+    },
+  ]
+
+  while (alternatives.length < 3) {
+    alternatives.push(genericAlternatives[alternatives.length])
+  }
+
+  return alternatives.slice(0, 3)
+}
+
+// Helper function to generate language-specific learning resources
+function generateLearningResources(
+  language: string,
+  code: string,
+  existing: any[],
+): Array<{ title: string; description: string }> {
+  const resources = [...existing]
+
+  const languageResources: Record<string, Array<{ title: string; description: string }>> = {
+    javascript: [
+      { title: "JavaScript Error Handling", description: "Learn about try-catch and error handling patterns" },
+      { title: "JavaScript Best Practices", description: "Modern JavaScript coding standards and patterns" },
+      { title: "Debugging JavaScript", description: "Tools and techniques for debugging JS code" },
+    ],
+    typescript: [
+      { title: "TypeScript Type System", description: "Understanding TypeScript's type checking" },
+      { title: "TypeScript Best Practices", description: "Writing type-safe TypeScript code" },
+      { title: "TypeScript Error Handling", description: "Handling errors in TypeScript applications" },
+    ],
+    python: [
+      { title: "Python Exception Handling", description: "Learn about Python's try-except blocks" },
+      { title: "Python Best Practices", description: "PEP 8 and Python coding standards" },
+      { title: "Python Debugging", description: "Using pdb and debugging tools in Python" },
+    ],
+    java: [
+      { title: "Java Exception Handling", description: "Understanding Java's exception hierarchy" },
+      { title: "Java Best Practices", description: "Writing clean and maintainable Java code" },
+      { title: "Java Debugging", description: "Using IDE debuggers and logging in Java" },
+    ],
+    cpp: [
+      { title: "C++ Error Handling", description: "Exception handling and error codes in C++" },
+      { title: "C++ Best Practices", description: "Modern C++ coding standards" },
+      { title: "C++ Debugging", description: "Using GDB and other C++ debugging tools" },
+    ],
+    c: [
+      { title: "C Error Handling", description: "Error codes and errno in C programming" },
+      { title: "C Best Practices", description: "Writing safe and efficient C code" },
+      { title: "C Debugging", description: "Using GDB and Valgrind for C debugging" },
+    ],
+  }
+
+  const defaultResources = languageResources[language.toLowerCase()] || languageResources["javascript"]
+
+  while (resources.length < 3) {
+    resources.push(defaultResources[resources.length])
+  }
+
+  return resources.slice(0, 3)
 }
