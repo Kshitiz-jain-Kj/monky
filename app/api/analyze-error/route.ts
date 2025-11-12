@@ -93,47 +93,66 @@ Important:
       throw new Error("No response from Gemini API")
     }
 
-    const firstBraceIndex = aiResponse.indexOf("{")
-    const lastBraceIndex = aiResponse.lastIndexOf("}")
+    // Extract JSON from markdown code blocks if present
+    let jsonString = aiResponse
+
+    // Remove markdown code blocks if present
+    if (jsonString.includes("```json")) {
+      jsonString = jsonString.replace(/```json\s*/g, "").replace(/```\s*$/g, "")
+    } else if (jsonString.includes("```")) {
+      jsonString = jsonString.replace(/```\s*/g, "")
+    }
+
+    // Find the JSON object boundaries
+    const firstBraceIndex = jsonString.indexOf("{")
+    const lastBraceIndex = jsonString.lastIndexOf("}")
 
     if (firstBraceIndex === -1 || lastBraceIndex === -1 || firstBraceIndex >= lastBraceIndex) {
+      console.error("[v0] Could not find valid JSON boundaries in:", aiResponse.substring(0, 200))
       throw new Error("Could not find valid JSON in AI response")
     }
 
-    const jsonString = aiResponse.substring(firstBraceIndex, lastBraceIndex + 1)
-
-    const sanitizedJson = jsonString
-      .replace(/[\n\r\t]/g, " ") // Replace newlines/tabs with space
-      .replace(/\\(?!["\\/bfnrtu])/g, "\\\\") // Escape unescaped backslashes
-      .replace(/"([^"\\]|\\.)*"/g, (match) => {
-        // Fix unescaped quotes inside string values
-        return match.replace(/(?<!\\)"/g, '\\"').replace(/\\\\"/g, '\\"')
-      })
+    jsonString = jsonString.substring(firstBraceIndex, lastBraceIndex + 1)
 
     let aiAnalysis
     try {
-      aiAnalysis = JSON.parse(sanitizedJson)
+      // Try direct parse first
+      aiAnalysis = JSON.parse(jsonString)
     } catch (parseError) {
-      console.error("[v0] JSON parse failed, attempting recovery:", parseError)
+      console.error("[v0] JSON parse failed, raw response:", jsonString.substring(0, 200))
+      console.error("[v0] Parse error:", parseError)
 
-      // Try to extract key fields manually as fallback
-      const errorTypeMatch = jsonString.match(/"errorType"\s*:\s*"([^"]*)"/)
-      const rootCauseMatch = jsonString.match(/"rootCause"\s*:\s*"([^"]*)"/)
+      // Try with basic sanitization
+      try {
+        const sanitized = jsonString
+          .replace(/[\n\r\t]/g, " ") // Remove newlines and tabs
+          .replace(/\s+/g, " ") // Normalize whitespace
+          .trim()
 
-      aiAnalysis = {
-        errorType: errorTypeMatch?.[1] || "Analysis Error",
-        severity: "warning",
-        explanationEnglish: "Error analyzing code",
-        explanationHindi: "कोड का विश्लेषण करने में त्रुटि",
-        rootCause: rootCauseMatch?.[1] || "Could not parse AI response",
-        fixedCode: code,
-        fixExplanation: "Please review the code manually",
-        complexity: "Medium",
-        confidence: 50,
-        alternatives: [],
-        variableSnapshot: {},
-        learningResources: [],
-        learningTip: "Use console.log to debug",
+        aiAnalysis = JSON.parse(sanitized)
+      } catch (secondError) {
+        console.error("[v0] Second parse attempt failed:", secondError)
+
+        // Fallback to extracting key fields manually
+        const errorTypeMatch = jsonString.match(/"errorType"\s*:\s*"([^"]*)"/)
+        const rootCauseMatch = jsonString.match(/"rootCause"\s*:\s*"([^"]*)"/)
+        const fixedCodeMatch = jsonString.match(/"fixedCode"\s*:\s*"([^"]*)"/)
+
+        aiAnalysis = {
+          errorType: errorTypeMatch?.[1] || "Analysis Error",
+          severity: "warning",
+          explanationEnglish: "Unable to parse complete AI analysis",
+          explanationHindi: "पूर्ण AI विश्लेषण को पार्स करने में असमर्थ",
+          rootCause: rootCauseMatch?.[1] || "JSON parsing failed",
+          fixedCode: fixedCodeMatch?.[1] || code,
+          fixExplanation: "Please review the code manually for improvements",
+          complexity: "Medium",
+          confidence: 50,
+          alternatives: [],
+          variableSnapshot: {},
+          learningResources: [],
+          learningTip: "Consider using a linter to catch syntax errors early",
+        }
       }
     }
 
